@@ -14,6 +14,10 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../../components/Navbar";
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -135,74 +139,98 @@ const SensorDetail = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">
-        {sensor.name} ({sensor.model})
-      </h1>
+    <div className="w-screen h-screen flex flex-col">
+      <Navbar />
+      <a
+        href="/sensors"
+        className="absolute top-32 z-50 text-black hover:text-gray-400 transition ml-14"
+      >
+        <FontAwesomeIcon icon={faAngleLeft} size="lg" />
+      </a>
+      <div className="m-8 mt-8 p-6 space-y-6">
+        <h1 className="text-2xl font-bold mt-8">
+          {sensor.name} ({sensor.model})
+        </h1>
 
-      {error && <p className="text-red-600">{error}</p>}
+        {error && <p className="text-red-600">{error}</p>}
 
-      <div className="mb-6">
-        <h2 className="font-semibold mb-2">Add Reading</h2>
-        <form onSubmit={handleAddReading} className="space-x-2">
-          <input
-            type="number"
-            step="0.1"
-            placeholder="Temperature"
-            value={temperature}
-            onChange={(e) => setTemperature(e.target.value)}
-            className="border px-2 py-1 rounded"
-            required
-          />
-          <input
-            type="number"
-            step="0.1"
-            placeholder="Humidity"
-            value={humidity}
-            onChange={(e) => setHumidity(e.target.value)}
-            className="border px-2 py-1 rounded"
-            required
-          />
-          <input
-            type="datetime-local"
-            value={timestamp}
-            onChange={(e) => setTimestamp(e.target.value)}
-            className="border px-2 py-1 rounded"
-            required
-          />
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-3 py-1 rounded"
-          >
-            Add
-          </button>
-        </form>
-      </div>
-      <div className="mb-2">
-        <input
-          type="datetime-local"
-          placeholder="Time From"
-          value={timeFrom}
-          onChange={(e) => setTimeFrom(e.target.value)}
-          className="border px-2 py-1 rounded mr-2"
-        />
-        <input
-          type="datetime-local"
-          placeholder="Time To"
-          value={timeTo}
-          onChange={(e) => setTimeTo(e.target.value)}
-          className="border px-2 py-1 rounded mr-2"
-        />
-        <button
-          type="button"
-          className="bg-green-500 text-white px-3 py-1 rounded"
-          onClick={() => fetchData()}
-        >
-          Filter
-        </button>
-      </div>
-      <div>
-        <Line data={chartData} options={chartOptions} />
+        <div className="bg-white">
+          {/* Add Reading */}
+          <div className="mb-4">
+            <h3 className="font-medium mb-2 text-gray-700">Add Reading</h3>
+            <form onSubmit={handleAddReading} className="flex flex-wrap gap-2">
+              <input
+                type="number"
+                step="0.1"
+                placeholder="Temperature"
+                value={temperature}
+                onChange={(e) => setTemperature(e.target.value)}
+                className="border px-3 py-2 rounded-md w-40"
+                required
+              />
+              <input
+                type="number"
+                step="0.1"
+                placeholder="Humidity"
+                value={humidity}
+                onChange={(e) => setHumidity(e.target.value)}
+                className="border px-3 py-2 rounded-md w-40"
+                required
+              />
+              <input
+                type="datetime-local"
+                value={timestamp}
+                onChange={(e) => setTimestamp(e.target.value)}
+                className="border px-3 py-2 rounded-md"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+
+          {/* Filter */}
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="font-medium mb-2 text-gray-700">Filter by Time</h3>
+            <div className="flex flex-wrap gap-2">
+              <input
+                type="datetime-local"
+                placeholder="From"
+                value={timeFrom}
+                onChange={(e) => setTimeFrom(e.target.value)}
+                className="border px-3 py-2 rounded-md"
+              />
+              <input
+                type="datetime-local"
+                placeholder="To"
+                value={timeTo}
+                onChange={(e) => setTimeTo(e.target.value)}
+                className="border px-3 py-2 rounded-md"
+              />
+              <button
+                type="button"
+                className="bg-green-700 hover:bg-green-800 text-white px-4 py-2 rounded-md transition"
+                onClick={() => fetchData()}
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* === Bottom Section: Chart === */}
+        <div className="border border-gray-300 rounded-2xl shadow-sm bg-white p-6">
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">
+            Sensor Data Overview
+          </h2>
+          <div className="w-full max-w-6xl h-[600px] mx-auto">
+            <Line data={chartData} options={chartOptions} />
+          </div>
+        </div>
       </div>
     </div>
   );

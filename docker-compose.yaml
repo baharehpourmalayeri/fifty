@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=fifty
+      - POSTGRES_USER=fiftyUser
+      - POSTGRES_PASSWORD=fifty!pass!123
+    ports:
+      - "5433:5432"
+
+  web:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - DATABASE_NAME=fifty
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=fiftyUser
+      - DATABASE_PASSWORD=fifty!pass!123
+    depends_on:
+      - db
+
+  app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:

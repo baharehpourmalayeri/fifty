@@ -63,14 +63,14 @@ const Login = () => {
           {error && <p className="text-red-600 text-center">{error}</p>}
           <button
             type="submit"
-            className="w-full py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+            className="w-full py-2 bg-green-700 text-white rounded-lg hover:bg-green-600 transition"
           >
             Login
           </button>
         </form>
         <p className="mt-4 text-center text-sm">
           Don’t have an account?{" "}
-          <a href="/register" className="text-green-500 hover:underline">
+          <a href="/register" className="text-green-700 hover:text-green-600">
             Register
           </a>
         </p>
